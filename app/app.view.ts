@@ -14,12 +14,14 @@ namespace $.$$ {
 		}
 
 		// $hyoo_sync_yard.master_list() берёт схему сокета из location.protocol, а sync.hyoo.ru
-		// отвечает 308 на ws:// (Caddy требует TLS). Без этого оверрайда локальный dev-сервер
-		// на http:// не может подключиться к мастеру и домен остаётся пустым.
+		// отвечает 308 на ws:// (Caddy требует TLS). Только на http:// (локальный dev-сервер)
+		// принудительно ходим по wss; список мастеров остаётся штатным, на https ничего не меняется.
 		@ $mol_mem
 		Yard() {
 			const yard = super.Yard()
-			yard.master_list = () => [ 'wss://sync.hyoo.ru' ]
+			if( this.$.$mol_dom_context.document.location.protocol === 'http:' ) {
+				yard.master_list = () => this.$.$hyoo_sync_masters.map( host => `wss://${ host }` )
+			}
 			return yard
 		}
 

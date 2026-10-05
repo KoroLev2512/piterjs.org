@@ -1675,6 +1675,14 @@ namespace $.$$ {
 				color: '#5a5a5a',
 			},
 		},
+		Next_event_reg_bid: {
+			fontFamily: 'var(--font-mono)',
+			fontSize: '11px',
+			color: '#ff6b6b',
+			':empty': {
+				display: 'none',
+			},
+		},
 		Next_event_reg_check: {
 			textTransform: 'uppercase',
 			alignSelf: 'flex-start',
@@ -1694,6 +1702,12 @@ namespace $.$$ {
 				background: '#181d28',
 			},
 			'@': {
+				disabled: {
+					true: {
+						opacity: '0.45',
+						cursor: 'not-allowed',
+					},
+				},
 				mol_check_checked: {
 					true: {
 						background: 'var(--color-caution-yellow)',

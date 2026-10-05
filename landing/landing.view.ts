@@ -17,24 +17,23 @@ namespace $.$$ {
 		// Header & Dynamic Meetup Details
 		@ $mol_mem
 		meetup_title() {
-			return this.meetup_current()?.title() || ( this.meetup_loading() ? 'PITERJS' : 'PITERJS #56' )
+			return this.meetup_current()?.title() || 'PITERJS'
 		}
 
 		@ $mol_mem
 		meetup_num() {
-			const match = this.meetup_title().match( /\d+/ )
-			return match ? match[0] : '56'
+			return this.meetup_title().match( /\d+/ )?.[0] ?? ''
 		}
 
 		@ $mol_mem
 		logo_version_tag() {
 			if( this.meetup_loading() ) return 'v...'
-			return `v.${this.meetup_num()}.0`
+			return this.meetup_num() ? `v.${this.meetup_num()}.0` : ''
 		}
 
 		@ $mol_mem
 		rsvp_btn_text() {
-			return `[ Зарегистрироваться #${this.meetup_num()} ]`
+			return this.meetup_num() ? `[ Зарегистрироваться #${this.meetup_num()} ]` : '[ Зарегистрироваться ]'
 		}
 
 		// Registration modal
@@ -55,6 +54,19 @@ namespace $.$$ {
 		@ $mol_mem
 		rsvp_slot() {
 			return this.rsvp_open() ? [ this.Rsvp_modal() ] : []
+		}
+
+		// Блок записи живёт, пока запись открыта: после старта митапа на странице
+		// митапа его тоже нет ($piterjs_meetup.join_allowed)
+		@ $mol_mem
+		rsvp_content() {
+			return [
+				this.Rsvp_head(),
+				this.Rsvp_title(),
+				this.Rsvp_meta(),
+				... this.meetup_current()?.join_allowed() ? [ this.Next_event_reg() ] : [],
+				this.Rsvp_note(),
+			]
 		}
 
 		@ $mol_mem
@@ -101,19 +113,51 @@ namespace $.$$ {
 			return this.modal_open() ? [ this.Cfp_modal() ] : []
 		}
 
+		// Своего бэкенда у сайта нет, поэтому заявка уходит письмом на адрес
+		// оргкомитета (тот же, что в разделе «Сейчас»), а не в пустоту
+		cfp_recipient() {
+			return 'team@piterjs.org'
+		}
+
+		// Первая найденная ошибка или пустая строка, если форма заполнена
+		cfp_bid() {
+			if( !this.cfp_email().trim() ) return 'Укажите email'
+			if( !/^\S+@\S+\.\S+$/.test( this.cfp_email().trim() ) ) return 'Email указан неверно'
+			if( !this.cfp_contact().trim() ) return 'Укажите контакт в Telegram'
+			if( !this.cfp_name().trim() ) return 'Укажите имя и фамилию'
+			if( !this.cfp_title().trim() ) return 'Укажите тему доклада'
+			if( !this.cfp_desc().trim() ) return 'Опишите тезисы доклада'
+			return ''
+		}
+
+		cfp_mailto() {
+			const body = [
+				[ 'Имя', this.cfp_name() ],
+				[ 'Компания и должность', this.cfp_company() ],
+				[ 'Email', this.cfp_email() ],
+				[ 'Telegram', this.cfp_contact() ],
+				[ 'Тема', this.cfp_title() ],
+			].map( ( [ key, val ] ) => `${ key }: ${ val.trim() }` )
+			body.push( '', this.cfp_desc().trim() )
+			const query = new URLSearchParams( {
+				subject: `Заявка на доклад: ${ this.cfp_title().trim() }`,
+				body: body.join( '\r\n' ),
+			} )
+			// URLSearchParams кодирует пробел плюсом, а в mailto это буквальный плюс
+			return `mailto:${ this.cfp_recipient() }?` + query.toString().replace( /\+/g, '%20' )
+		}
+
 		cfp_submit() {
-			if( !this.cfp_name() || !this.cfp_title() || !this.cfp_contact() ) {
-				this.toast_message( '⚠️ Пожалуйста, заполните обязательные поля формы' )
+			const bid = this.cfp_bid()
+			if( bid ) {
+				this.toast_message( `⚠️ ${ bid }` )
 				return
 			}
 			this.modal_open( false )
-			this.toast_message( '⚡ Заявка на доклад принята! Программный комитет PiterJS свяжется с вами.' )
-			this.cfp_email( '' )
-			this.cfp_contact( '' )
-			this.cfp_name( '' )
-			this.cfp_company( '' )
-			this.cfp_title( '' )
-			this.cfp_desc( '' )
+			this.$.$mol_dom_context.location.href = this.cfp_mailto()
+			// поля не чистим: пока письмо не отправлено, заявка не подана,
+			// а почтовый клиент можно закрыть
+			this.toast_message( `✉️ Письмо готово — отправьте его из почтового клиента на ${ this.cfp_recipient() }` )
 		}
 
 		// Toast
@@ -143,8 +187,28 @@ namespace $.$$ {
 			return Object.keys( this.nav_titles() ).map( id => this.Nav_m_link( id ) )
 		}
 
+		// Хеш приложения — это его состояние ($mol_state_arg): ссылка вида `#hero`
+		// стёрла бы `landing` и выкинула бы пользователя из лендинга. Поэтому href
+		// ведёт на сам лендинг, а переход к секции делает nav_click.
 		nav_uri( id: string ) {
-			return `#${id}`
+			return this.$.$mol_state_arg.link( { landing: '' } )
+		}
+
+		nav_click( id: string, event?: Event ) {
+			event?.preventDefault()
+			this.nav_mobile_close()
+			this.nav_sections()[ id ]?.dom_node().scrollIntoView( { behavior: 'smooth', block: 'start' } )
+		}
+
+		@ $mol_mem
+		nav_sections(): Record< string, $mol_view > {
+			return {
+				hero: this.Section_hero(),
+				manifesto: this.Section_manifesto(),
+				schedule: this.Section_schedule(),
+				archive: this.Section_archive(),
+				community: this.Section_community(),
+			}
 		}
 
 		nav_title( id: string ) {
@@ -157,7 +221,7 @@ namespace $.$$ {
 
 		@ $mol_mem
 		nav_current( next?: string ) {
-			return next ?? 'hero'
+			return next ?? Object.keys( this.nav_titles() )[0]
 		}
 
 		// Текущей считается последняя секция, верх которой поднялся выше этой
@@ -167,11 +231,16 @@ namespace $.$$ {
 		}
 
 		nav_spy() {
-			const doc = this.$.$mol_dom_context.document
-			let current = 'hero'
-			for( const id of Object.keys( this.nav_titles() ) ) {
-				const top = doc.getElementById( id )?.getBoundingClientRect().top
-				if( top !== undefined && top <= this.nav_spy_offset() ) current = id
+			const ids = Object.keys( this.nav_sections() )
+			let current = ids[0]
+			for( const id of ids ) {
+				const top = this.nav_sections()[ id ].dom_node().getBoundingClientRect().top
+				if( top <= this.nav_spy_offset() ) current = id
+			}
+			// последняя секция может быть ниже линии даже в самом низу страницы
+			const root = this.dom_node()
+			if( root.scrollTop > 0 && root.scrollTop + root.clientHeight >= root.scrollHeight - 2 ) {
+				current = ids[ ids.length - 1 ]
 			}
 			this.nav_current( current )
 		}
@@ -232,13 +301,20 @@ namespace $.$$ {
 			return start < this.now_time()
 		}
 
+		// Номер следующего митапа, когда текущий уже прошёл
+		@ $mol_mem
+		next_num() {
+			if( !this.meetup_num() ) return ''
+			return String( Number( this.meetup_num() ) + ( this.meetup_passed() ? 1 : 0 ) )
+		}
+
 		@ $mol_mem
 		hero_badge() {
 			if( this.meetup_loading() ) {
 				return 'PITERJS // ЗАГРУЗКА...'
 			}
 			if( this.meetup_passed() ) {
-				return `PITERJS #${ Number( this.meetup_num() ) + 1 } // SOON`
+				return this.next_num() ? `PITERJS #${ this.next_num() } // SOON` : 'PITERJS // SOON'
 			}
 			return `${this.meetup_title().toUpperCase()} // ${this.free_slots()}`
 		}
@@ -270,11 +346,11 @@ namespace $.$$ {
 			return $mol_state_time.now( 1000 )
 		}
 
+		// Дата ближайшего митапа, если она известна и ещё впереди
 		@ $mol_mem
 		target_timestamp() {
 			const start = this.meetup_current()?.start()?.valueOf()
-			if( start && start > Date.now() ) return start
-			return new Date( '2026-08-15T19:00:00+03:00' ).getTime()
+			return start && start > this.now_time() ? start : 0
 		}
 
 		@ $mol_mem
@@ -298,13 +374,14 @@ namespace $.$$ {
 		// стилями, иначе пустые div съедали бы gap коробки.
 		@ $mol_mem
 		cfp_promo_text() {
-			return `СТАНЬ ДОКЛАДЧИКОМ НА PITERJS #${ Number( this.meetup_num() ) + 1 }`
+			return this.next_num() ? `СТАНЬ ДОКЛАДЧИКОМ НА PITERJS #${ this.next_num() }` : 'СТАНЬ ДОКЛАДЧИКОМ НА PITERJS'
 		}
 
 		@ $mol_mem
 		countdown_content() {
 			if( this.meetup_loading() ) return [ this.Countdown_skeleton() ]
-			if( this.meetup_passed() ) return [ this.Cfp_promo(), this.Cfp_promo_btn() ]
+			// нет даты в будущем — считать не до чего, зовём на CFP
+			if( !this.target_timestamp() ) return [ this.Cfp_promo(), this.Cfp_promo_btn() ]
 			return [
 				this.Countdown_label(),
 				this.Timer_units(),
@@ -319,7 +396,7 @@ namespace $.$$ {
 				this.Disc_title(),
 				this.Disc_meta_time(),
 				this.Disc_meta_place(),
-				this.Disc_meta_map(),
+				... this.disc_meta_map_content().length ? [ this.Disc_meta_map() ] : [],
 			]
 		}
 
@@ -338,7 +415,8 @@ namespace $.$$ {
 
 		@ $mol_mem
 		disc_meta_map_content() {
-			return this.review_open() ? [ this.Review_link() ] : [ this.Map_link() ]
+			if( this.review_open() ) return [ this.Review_link() ]
+			return this.place_address() ? [ this.Map_link() ] : []
 		}
 
 		unit_str( id: string ) {
@@ -364,40 +442,84 @@ namespace $.$$ {
 			return this.$.$mol_state_local.value( 'name_real', next ) ?? ''
 		}
 
+		// Правила записи те же, что на странице митапа ($piterjs_meetup_page):
+		// имя из двух слов, свободное место, запись пока митап не начался
+
+		visitor_name_clean() {
+			return this.visitor_name().trim().replace( /\s+/g, ' ' )
+		}
+
+		visitor_name_bid() {
+			const name = this.visitor_name_clean()
+			if( !name ) return 'Обязательно'
+			if( !/\S{2,}\s\S{2,}/.test( name ) ) return 'От двух слов'
+			return ''
+		}
+
+		// Не $mol_mem: читается из visitor_joined, который сам мемоизирован
+		visitor_registered() {
+			const meetup = this.meetup_current()
+			const peer = meetup?.land.peer_id()
+			return Boolean( peer && meetup?.joined_name( peer ) )
+		}
+
+		visitor_editable() {
+			return !this.visitor_registered()
+		}
+
+		visitor_join_enabled() {
+			if( this.visitor_registered() ) return true
+			if( this.visitor_name_bid() ) return false
+			const meetup = this.meetup_current()
+			if( !meetup?.join_allowed() ) return false
+			return ( meetup.place()?.capacity_max() ?? 0 ) > meetup.joined_count()
+		}
+
 		@ $mol_mem
 		visitor_joined( next?: boolean ) {
-			const peer = this.meetup_current()?.land.peer_id()
-			if( !peer ) return false
-			
-			if( next === true ) this.meetup_current()?.joined_name( peer, this.visitor_name() )
-			if( next === false ) this.meetup_current()?.joined_name( peer, '' )
-			return Boolean( this.meetup_current()?.joined_name( peer ) )
+			const meetup = this.meetup_current()
+			const peer = meetup?.land.peer_id()
+			if( !meetup || !peer ) return false
+
+			// без проверки пустое имя записало бы «пустую» регистрацию,
+			// которая считается снятием записи
+			if( next === true && this.visitor_join_enabled() ) meetup.joined_name( peer, this.visitor_name_clean() )
+			if( next === false ) meetup.joined_name( peer, '' )
+			return this.visitor_registered()
 		}
 
 		// Next Event Card
 		@ $mol_mem
 		next_event_title() {
-			return this.meetup_current()?.title() || 'PITERJS #56'
+			return this.meetup_title()
 		}
 
 		@ $mol_mem
 		next_event_time() {
 			const start = this.meetup_current()?.start()
 			if( start ) return start.toString( 'D Month YYYY', 'ru' ).toUpperCase() + ' // ' + start.toString( 'hh:mm' )
-			return '15 АВГУСТА 2026 // 19:00'
+			return 'ДАТА УТОЧНЯЕТСЯ'
 		}
 
 		@ $mol_mem
 		next_event_place() {
 			const place = this.meetup_current()?.place()?.title()
 			if( place ) return place.toUpperCase() + ', САНКТ-ПЕТЕРБУРГ'
-			return 'ИТ-ХАБ, САНКТ-ПЕТЕРБУРГ'
+			return 'МЕСТО УТОЧНЯЕТСЯ'
+		}
+
+		@ $mol_mem
+		place_address() {
+			return this.meetup_current()?.place()?.address() || ''
 		}
 
 		@ $mol_mem
 		next_event_map_uri() {
-			const addr = this.meetup_current()?.place()?.address() || 'Санкт-Петербург, Аптекарский проспект, 4'
-			return 'https://yandex.ru/maps/?text=' + encodeURIComponent( addr )
+			return this.map_uri( this.place_address() )
+		}
+
+		map_uri( address: string ) {
+			return 'https://yandex.ru/maps/?text=' + encodeURIComponent( address )
 		}
 
 		// Manifesto Stats
@@ -435,7 +557,18 @@ namespace $.$$ {
 
 		@ $mol_mem
 		schedule_intro() {
-			return this.meetup_current()?.description() || 'Три больших инспекции современного стека: от графических пайплайнов до высокопроизводительного инструментария на Rust.'
+			return this.meetup_current()?.description() || ''
+		}
+
+		@ $mol_mem
+		schedule_content() {
+			return [
+				this.Schedule_heading(),
+				... this.schedule_intro() ? [ this.Schedule_intro() ] : [],
+				this.Talks_grid(),
+				this.Cfp_cta_card(),
+				this.Venue_card(),
+			]
 		}
 
 		@ $mol_mem
@@ -457,13 +590,19 @@ namespace $.$$ {
 		}
 
 		talk_time( id: string ) {
-			const s = this.speech_item( id )
-			if( s?.start() ) return s.start().toString( 'hh:mm' )
-			return '19:00'
+			return this.speech_item( id )?.start()?.toString( 'hh:mm' ) ?? ''
+		}
+
+		@ $mol_mem_key
+		talk_top_content( id: string ) {
+			return [
+				this.Talk_tag( id ),
+				... this.talk_time( id ) ? [ this.Talk_time( id ) ] : [],
+			]
 		}
 
 		talk_title( id: string ) {
-			return this.speech_item( id )?.title() || 'Тема доклада'
+			return this.speech_item( id )?.title() || 'Тема уточняется'
 		}
 
 		talk_abstract( id: string ) {
@@ -568,9 +707,18 @@ namespace $.$$ {
 			return this.speech_item( id )?.speaker()?.title() || 'Спикер PiterJS'
 		}
 
+		// Должность не выдумываем: нет данных — строки нет
 		speaker_role( id: string ) {
 			const s = this.speech_item( id )
-			return s?.speaker()?.description() || s?.speaker()?.contact() || 'Инженер-разработчик'
+			return s?.speaker()?.description() || s?.speaker()?.contact() || ''
+		}
+
+		@ $mol_mem_key
+		speaker_info_content( id: string ) {
+			return [
+				this.Speaker_name( id ),
+				... this.speaker_role( id ) ? [ this.Speaker_role( id ) ] : [],
+			]
 		}
 
 		speaker_photo( id: string ) {
@@ -579,29 +727,44 @@ namespace $.$$ {
 		}
 
 		// Venue
+		// Чужой адрес и маршрут показывать нельзя: что нет в данных — того нет в карточке
 		@ $mol_mem
 		venue_title() {
-			return this.meetup_current()?.place()?.title() || 'ИТ-Хаб Санкт-Петербург'
+			return this.meetup_current()?.place()?.title() || 'Площадка уточняется'
 		}
 
 		@ $mol_mem
 		venue_meta1() {
-			return '📍 ' + ( this.meetup_current()?.place()?.address() || 'Аптекарский проспект, 4 (СПб, 197022)' )
+			return this.place_address() ? '📍 ' + this.place_address() : ''
 		}
 
 		@ $mol_mem
 		venue_meta2() {
-			return '🚇 ' + ( this.meetup_current()?.place()?.route() || 'Метро «Петроградская» (10 минут пешком)' )
+			const route = this.meetup_current()?.place()?.route()
+			return route ? '🚇 ' + route : ''
 		}
 
 		@ $mol_mem
 		venue_meta3() {
-			return '🚶 ' + ( this.meetup_current()?.place()?.notes() || 'Вход со стороны набережной Карповки' )
+			const notes = this.meetup_current()?.place()?.notes()
+			return notes ? '🚶 ' + notes : ''
 		}
 
 		@ $mol_mem
 		venue_map_uri() {
-			return 'https://yandex.ru/maps/?text=' + encodeURIComponent( this.meetup_current()?.place()?.address() || 'Санкт-Петербург, Аптекарский проспект, 4' )
+			return this.map_uri( this.place_address() )
+		}
+
+		@ $mol_mem
+		venue_content() {
+			return [
+				this.Venue_badge(),
+				this.Venue_title(),
+				... this.venue_meta1() ? [ this.Venue_meta1() ] : [],
+				... this.venue_meta2() ? [ this.Venue_meta2() ] : [],
+				... this.venue_meta3() ? [ this.Venue_meta3() ] : [],
+				... this.place_address() ? [ this.Venue_map_btn() ] : [],
+			]
 		}
 
 		// Archive Filtering & Pagination (6 per page)
@@ -711,7 +874,7 @@ namespace $.$$ {
 		soc_uri( id: string ) {
 			if( id === 'gh' ) return 'https://github.com/piterjs'
 			if( id === 'tg' ) return 'https://t.me/piterjs'
-			if( id === 'yt' ) return 'https://youtube.com'
+			if( id === 'yt' ) return 'https://www.youtube.com/@piterjs'
 			if( id === 'vk' ) return 'https://vk.com/piterjs'
 			return ''
 		}
