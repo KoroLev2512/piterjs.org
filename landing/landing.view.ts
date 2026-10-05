@@ -151,6 +151,44 @@ namespace $.$$ {
 			return this.nav_titles()[ id as keyof typeof this.nav_titles ]
 		}
 
+		nav_active( id: string ) {
+			return this.nav_current() === id
+		}
+
+		@ $mol_mem
+		nav_current( next?: string ) {
+			return next ?? 'hero'
+		}
+
+		// Текущей считается последняя секция, верх которой поднялся выше этой
+		// линии от верха вьюпорта. Как в прототипе: 200px.
+		nav_spy_offset() {
+			return 200
+		}
+
+		nav_spy() {
+			const doc = this.$.$mol_dom_context.document
+			let current = 'hero'
+			for( const id of Object.keys( this.nav_titles() ) ) {
+				const top = doc.getElementById( id )?.getBoundingClientRect().top
+				if( top !== undefined && top <= this.nav_spy_offset() ) current = id
+			}
+			this.nav_current( current )
+		}
+
+		// Слушаем в фазе захвата на document: так ловится прокрутка и окна,
+		// и любого вложенного контейнера — scroll не всплывает
+		@ $mol_mem
+		nav_spy_listener() {
+			const config = { passive: true, capture: true }
+			return new this.$.$mol_dom_listener(
+				this.$.$mol_dom_context.document,
+				'scroll',
+				() => this.nav_spy(),
+				config,
+			)
+		}
+
 		@ $mol_mem
 		burger_open( next?: boolean ) {
 			return next ?? false
@@ -441,12 +479,38 @@ namespace $.$$ {
 			return next ?? false
 		}
 
+		// line-clamp не анимируется, поэтому плавность даёт max-height: от 6 строк
+		// (9em при line-height 1.5) до замеренной высоты текста. Пока высота едет,
+		// clamp снят, иначе при раскрытии текст обрезался бы многоточием, а при
+		// сворачивании схлопнулся бы до 6 строк в первом же кадре.
+		@ $mol_mem_key
+		talk_animating( id: string, next?: boolean ) {
+			return next ?? false
+		}
+
+		@ $mol_mem_key
+		talk_full_height( id: string, next?: number ) {
+			return next ?? 0
+		}
+
 		talk_clamped( id: string ) {
-			return !this.talk_expanded( id )
+			return !this.talk_expanded( id ) && !this.talk_animating( id )
+		}
+
+		talk_max_height( id: string ) {
+			return this.talk_expanded( id ) ? `${ this.talk_full_height( id ) }px` : '9em'
 		}
 
 		talk_toggle( id: string ) {
+			// scrollHeight отдаёт полную высоту текста и под clamp'ом
+			this.talk_full_height( id, this.Talk_abstract( id ).dom_node().scrollHeight )
+			this.talk_animating( id, true )
 			this.talk_expanded( id, !this.talk_expanded( id ) )
+		}
+
+		talk_transition_end( id: string, event?: TransitionEvent ) {
+			if( event?.propertyName !== 'max-height' ) return
+			this.talk_animating( id, false )
 		}
 
 		talk_toggle_title( id: string ) {
@@ -471,6 +535,8 @@ namespace $.$$ {
 
 		@ $mol_mem
 		auto() {
+			// до speeches_list(): тот может бросить промис, пока данные едут
+			this.nav_spy_listener()
 			// size() делает пересчёт реактивным на ресайз: при другой ширине
 			// карточки текст переносится иначе и переполнение может исчезнуть
 			this.$.$mol_window.size()
@@ -486,9 +552,13 @@ namespace $.$$ {
 			for( const id of ids ) {
 				// в раскрытом виде клипа нет, мерить нечего — оставляем прошлый вердикт,
 				// иначе кнопка «Скрыть» исчезла бы сразу после раскрытия
-				if( this.talk_expanded( id ) ) continue
 				try {
 					const node = this.Talk_abstract( id ).dom_node()
+					// раскрытый текст на новой ширине переносится иначе — подгоняем высоту
+					if( this.talk_expanded( id ) ) {
+						this.talk_full_height( id, node.scrollHeight )
+						continue
+					}
 					this.talk_overflow( id, node.scrollHeight > node.clientHeight + 1 )
 				} catch {}
 			}

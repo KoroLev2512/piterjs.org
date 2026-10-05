@@ -296,10 +296,16 @@ $piterjs_landing $mol_view
 		<= Toast $mol_view
 			sub / <= toast_message \
 	Nav_link!id $mol_link
+		attr *
+			^
+			piterjs_landing_nav_active <= nav_active!id false
 		uri <= nav_uri!id \
 		click? <=> nav_mobile_close? null
 		sub / <= nav_title!id \
 	Nav_m_link!id $mol_link
+		attr *
+			^
+			piterjs_landing_nav_active <= nav_active!id false
 		uri <= nav_uri!id \
 		click? <=> nav_mobile_close? null
 		sub / <= nav_title!id \
@@ -338,6 +344,8 @@ $piterjs_landing $mol_view
 				attr *
 					^
 					piterjs_landing_talk_clamped <= talk_clamped!id true
+				style * maxHeight <= talk_max_height!id \9em
+				event * transitionend? <=> talk_transition_end!id? null
 				sub / <= talk_abstract!id \Описание доклада
 			<= Talk_more!id $mol_button_minor
 				click? <=> talk_toggle!id? null

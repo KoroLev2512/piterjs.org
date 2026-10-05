@@ -168,6 +168,14 @@ namespace $.$$ {
 					color: '#ffffff',
 					background: 'rgba(255, 255, 255, 0.08)',
 				},
+				'@': {
+					piterjs_landing_nav_active: {
+						true: {
+							color: 'var(--color-caution-yellow)',
+							background: 'rgba(255, 255, 255, 0.08)',
+						},
+					},
+				},
 			},
 		},
 		Nav_actions: {
@@ -753,6 +761,8 @@ namespace $.$$ {
 			fontSize: '14px',
 			color: '#555555',
 			lineHeight: '1.5',
+			overflow: 'hidden',
+			transition: 'max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
 			// сам клип в 6 строк — в landing.view.css: -webkit-line-clamp
 			// через $mol_style_define не выразить, см. комментарий там
 		},
@@ -1751,6 +1761,14 @@ namespace $.$$ {
 						':hover': {
 							color: '#fff313',
 							background: '#222222',
+						},
+						'@': {
+							piterjs_landing_nav_active: {
+								true: {
+									color: '#fff313',
+									background: '#222222',
+								},
+							},
 						},
 					},
 				},
