@@ -1,0 +1,59 @@
+$piterjs_landing_header $mol_view
+	logo_version_tag \
+	rsvp_btn_text \
+	rsvp_shown true
+	nav_titles *
+	nav_current \
+	nav_pick*? null
+	rsvp_click? null
+	burger_open? false
+	attr *
+		^
+		piterjs_landing_menu_open <= burger_open
+	sub /
+		<= Header $mol_view
+			dom_name \header
+			sub /
+				<= Header_inner $mol_view
+					sub /
+						<= Logo_link $mol_link
+							arg * landing null
+							sub /
+								<= Logo_img $mol_image
+									uri \piterjs/landing/assets/logo.webp
+								<= Logo_title $mol_view sub / \PITERJS
+								<= Logo_tag $mol_view sub / <= logo_version_tag \
+						<= Nav $mol_view
+							dom_name \nav
+							sub <= nav_links /
+						<= Nav_actions $mol_view
+							sub <= nav_actions /
+								<= Back_link $mol_link
+									arg * landing null
+									sub / \[ Все митапы ]
+								<= Rsvp_btn $mol_button_minor
+									click? <=> rsvp_press? null
+									sub / <= rsvp_btn_text \
+								<= Burger_btn $mol_button_minor
+									click? <=> burger_toggle? null
+									sub /
+										<= Burger_line1 $mol_view
+										<= Burger_line2 $mol_view
+										<= Burger_line3 $mol_view
+		<= Nav_mobile $mol_view
+			dom_name \nav
+			sub <= nav_mobile_links /
+	Nav_link* $mol_link
+		attr *
+			^
+			piterjs_landing_nav_active <= nav_active* false
+		uri <= nav_uri* \
+		click? <=> nav_click*? null
+		sub / <= nav_title* \
+	Nav_m_link* $mol_link
+		attr *
+			^
+			piterjs_landing_nav_active <= nav_active* false
+		uri <= nav_uri* \
+		click? <=> nav_click*? null
+		sub / <= nav_title* \

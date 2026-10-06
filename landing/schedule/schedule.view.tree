@@ -1,0 +1,57 @@
+$piterjs_landing_schedule $mol_view
+	meetup $piterjs_meetup
+	meetup_title \
+	attr *
+		^
+		id \schedule
+	sub /
+		<= Schedule_content $mol_view
+			sub <= schedule_content /
+				<= Schedule_heading $mol_view sub / <= schedule_heading \ПРОГРАММА PITERJS
+				<= Schedule_intro $mol_view sub / <= schedule_intro \
+				<= Talks_grid $mol_view
+					sub <= talks /
+				<= Cfp_cta_card $mol_view
+					sub /
+						<= Cfp_cta_badge $mol_view sub / \CALL FOR PAPERS // PITERJS #57
+						<= Cfp_cta_title $mol_view sub / \ХОТИТЕ ВЫСТУПИТЬ С ДОКЛАДОМ НА СЛЕДУЮЩЕМ МИТАПЕ?
+						<= Cfp_cta_text $mol_view sub / \Мы всегда ищем уникальный инженерный опыт, кейсы оптимизации, разборы фреймворков и дерзкие эксперименты. Поможем с подготовкой и презентацией!
+						<= Cfp_open_btn $mol_button_minor
+							click? <=> cfp_open? null
+							sub / \[ ПОДАТЬ ЗАЯВКУ НА ДОКЛАД ]
+				<= Venue_card $mol_view
+					sub <= venue_content /
+						<= Venue_badge $mol_view sub / \VENUE // ПЛОЩАДКА ПРОВЕДЕНИЯ
+						<= Venue_title $mol_view sub / <= venue_title \
+						<= Venue_meta1 $mol_view sub / <= venue_meta1 \
+						<= Venue_meta2 $mol_view sub / <= venue_meta2 \
+						<= Venue_meta3 $mol_view sub / <= venue_meta3 \
+						<= Venue_map_btn $mol_link
+							uri <= venue_map_uri \
+							target \_blank
+							sub / \[ ОТКРЫТЬ НА КАРТЕ ]
+	Talk* $mol_view
+		sub <= talk_content* /
+			<= Talk_top* $mol_view
+				sub <= talk_top_content* /
+					<= Talk_tag* $mol_view sub / <= talk_tag* \
+					<= Talk_time* $mol_view sub / <= talk_time* \
+			<= Talk_title* $mol_view sub / <= talk_title* \
+			<= Talk_abstract* $mol_view
+				attr *
+					^
+					piterjs_landing_talk_clamped <= talk_clamped* true
+				style * maxHeight <= talk_max_height* \9em
+				event * transitionend? <=> talk_transition_end*? null
+				sub / <= talk_abstract* \
+			<= Talk_more* $mol_button_minor
+				click? <=> talk_toggle*? null
+				sub / <= talk_toggle_title* \[ Показать больше ]
+			<= Talk_speaker* $mol_view
+				sub /
+					<= Speaker_photo* $mol_image
+						uri <= speaker_photo* \
+					<= Speaker_info* $mol_view
+						sub <= speaker_info_content* /
+							<= Speaker_name* $mol_view sub / <= speaker_name* \
+							<= Speaker_role* $mol_view sub / <= speaker_role* \

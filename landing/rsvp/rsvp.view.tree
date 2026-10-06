@@ -1,0 +1,35 @@
+$piterjs_landing_rsvp $mol_view
+	meetup $piterjs_meetup
+	meetup_title \
+	next_event_time \
+	next_event_place \
+	free_slots \
+	plugins /
+		<= Rsvp_hotkey $mol_hotkey
+			key * escape? <=> rsvp_close? null
+	sub /
+		<= Rsvp_backdrop $mol_view
+			event * click? <=> rsvp_close? null
+		<= Rsvp_dialog $mol_view
+			sub <= rsvp_content /
+				<= Rsvp_head $mol_view
+					sub /
+						<= Rsvp_badge $mol_view sub / \REGISTRATION
+						<= Rsvp_close_btn $mol_button_minor
+							click? <=> rsvp_close? null
+							sub / \[ ✕ ]
+				<= Rsvp_title $mol_view sub / <= rsvp_modal_title \
+				<= Rsvp_meta $mol_view sub / <= rsvp_modal_meta \
+				<= Next_event_reg $mol_view
+					sub /
+						<= Next_event_reg_label $mol_view sub / \Ваше имя и фамилия *
+						<= Next_event_reg_input $mol_string
+							value? <=> visitor_name? \
+							enabled <= visitor_editable true
+							hint \Иван Иванов
+						<= Next_event_reg_bid $mol_view sub / <= visitor_name_bid \
+						<= Next_event_reg_check $mol_check
+							checked? <=> visitor_joined? false
+							enabled <= visitor_join_enabled false
+							title \Я приду на митап
+				<= Rsvp_note $mol_view sub / <= rsvp_modal_note \

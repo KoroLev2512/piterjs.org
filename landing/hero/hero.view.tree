@@ -1,0 +1,90 @@
+$piterjs_landing_hero $mol_view
+	meetup $piterjs_meetup
+	loading false
+	passed false
+	meetup_title \
+	next_num \
+	free_slots \
+	now_time 0
+	attr *
+		^
+		id \hero
+	sub /
+		<= Hero_video $mol_view
+			dom_name \video
+			field *
+				^
+				autoplay true
+				loop true
+				muted true
+				playsInline true
+			attr *
+				poster \piterjs/landing/assets/hero_poster.webp
+				src \piterjs/landing/assets/background.mp4
+		<= Hero_scrim $mol_view
+		<= Hero_content $mol_view
+			sub /
+				<= Hero_intro $mol_view
+					sub /
+						<= Hero_status_row $mol_view
+							sub /
+								<= Status_badge $mol_view
+									sub /
+										<= Status_badge_text $mol_view sub / <= hero_badge \
+						<= Hero_title $mol_view
+							sub /
+								<= Hero_title_line1 $mol_view sub / \SAINT PETERSBURG
+								<= Hero_title_line2 $mol_view
+									sub /
+										<= Hero_title_accent $mol_view sub / \JAVASCRIPT
+										<= Hero_title_rest $mol_view sub / \COMMUNITY
+						<= Hero_subtitle $mol_view
+							sub / \Сообщество разработчиков, создающих будущее веба. Живые встречи, глубокие хардкорные доклады, нетворк и технологический драйв в самом сердце Санкт-Петербурга.
+				<= Hero_footer_grid $mol_view
+					sub /
+						<= Countdown_box $mol_view
+							sub <= countdown_content /
+								<= Countdown_label $mol_view sub / \ДО СЛЕДУЮЩЕЙ ВСТРЕЧИ ОСТАЛОСЬ:
+								<= Timer_units $mol_view
+									sub <= timer_units /
+								<= Cfp_promo $mol_view sub / <= cfp_promo_text \
+								<= Cfp_promo_btn $mol_button_minor
+									click? <=> cfp_open? null
+									sub / \[ ПОДАТЬ ЗАЯВКУ ]
+								<= Countdown_skeleton $mol_view
+									sub /
+										<= Countdown_skel_line1 $mol_view
+										<= Countdown_skel_line2 $mol_view
+										<= Countdown_skel_btn $mol_view
+						<= Discovery_card $mol_view
+							sub <= discovery_content /
+								<= Disc_badge $mol_view sub / <= event_badge \NEXT EVENT
+								<= Disc_title $mol_view sub / <= next_event_title \
+								<= Disc_meta_time $mol_view
+									sub /
+										<= Disc_text_time $mol_view sub / <= next_event_time \
+								<= Disc_meta_place $mol_view
+									sub /
+										<= Disc_text_place $mol_view sub / <= next_event_place \
+								<= Disc_meta_map $mol_view
+									sub <= disc_meta_map_content /
+										<= Map_link $mol_link
+											uri <= next_event_map_uri \
+											target \_blank
+											sub / \[ На карте ]
+										<= Review_link $mol_link
+											arg *
+												landing null
+												meetup <= meetup_current_id \
+											sub / \[ Оставить отзыв ]
+								<= Discovery_skeleton $mol_view
+									sub /
+										<= Disc_skel_badge $mol_view
+										<= Disc_skel_title1 $mol_view
+										<= Disc_skel_title2 $mol_view
+										<= Disc_skel_meta1 $mol_view
+										<= Disc_skel_meta2 $mol_view
+	Unit* $mol_view
+		sub /
+			<= Unit_val* $mol_view sub / <= unit_str* \00
+			<= Unit_tag* $mol_view sub / <= unit_title* \

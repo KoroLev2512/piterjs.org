@@ -3,7 +3,6 @@ $piterjs_landing $mol_view
 	meetups /
 	attr *
 		^
-		piterjs_landing_menu_open <= burger_open false
 		piterjs_landing_rsvp_open <= rsvp_open false
 	nav_titles *
 		hero \Главная
@@ -11,372 +10,48 @@ $piterjs_landing $mol_view
 		schedule \Доклады
 		archive \Архив
 		community \Сообщество
-	filter_titles *
-		all \Все
-		piterjs \PiterJS
-		piterux \PiterUX
-		conf \Conf
 	sub /
-		<= Header $mol_view
-			dom_name \header
-			sub /
-				<= Header_inner $mol_view
-					sub /
-						<= Logo_link $mol_link
-							arg * landing null
-							sub /
-								<= Logo_img $mol_image
-									uri \piterjs/landing/assets/logo.webp
-								<= Logo_title $mol_view sub / \PITERJS
-								<= Logo_tag $mol_view sub / <= logo_version_tag \
-						<= Nav $mol_view
-							dom_name \nav
-							sub <= nav_links /
-						<= Nav_actions $mol_view
-							sub <= nav_actions /
-								<= Back_link $mol_link
-									arg * landing null
-									sub / \[ Все митапы ]
-								<= Rsvp_btn $mol_button_minor
-									click? <=> rsvp_click? null
-									sub / <= rsvp_btn_text \
-								<= Burger_btn $mol_button_minor
-									click? <=> burger_toggle? null
-									sub /
-										<= Burger_line1 $mol_view
-										<= Burger_line2 $mol_view
-										<= Burger_line3 $mol_view
-		<= Nav_mobile $mol_view
-			dom_name \nav
-			sub <= nav_mobile_links /
+		<= Header $piterjs_landing_header
+			logo_version_tag <= logo_version_tag \
+			rsvp_btn_text <= rsvp_btn_text \
+			rsvp_shown <= rsvp_shown true
+			nav_titles <= nav_titles
+			nav_current <= nav_current \
+			nav_pick*? <=> nav_pick*? null
+			rsvp_click? <=> rsvp_click? null
+			burger_open? <=> burger_open? false
 		<= Main $mol_view
 			dom_name \main
 			sub /
-				<= Section_hero $mol_view
-					attr * id \hero
-					sub /
-						<= Hero_video $mol_view
-							dom_name \video
-							field *
-								^
-								autoplay true
-								loop true
-								muted true
-								playsInline true
-							attr *
-								poster \piterjs/landing/assets/hero_poster.webp
-								src \piterjs/landing/assets/background.mp4
-						<= Hero_scrim $mol_view
-						<= Hero_content $mol_view
-							sub /
-								<= Hero_intro $mol_view
-									sub /
-										<= Hero_status_row $mol_view
-											sub /
-												<= Status_badge $mol_view
-													sub /
-														<= Status_badge_text $mol_view sub / <= hero_badge \
-										<= Hero_title $mol_view
-											sub /
-												<= Hero_title_line1 $mol_view sub / \SAINT PETERSBURG
-												<= Hero_title_line2 $mol_view
-													sub /
-														<= Hero_title_accent $mol_view sub / \JAVASCRIPT
-														<= Hero_title_rest $mol_view sub / \COMMUNITY
-										<= Hero_subtitle $mol_view
-											sub / \Сообщество разработчиков, создающих будущее веба. Живые встречи, глубокие хардкорные доклады, нетворк и технологический драйв в самом сердце Санкт-Петербурга.
-								<= Hero_footer_grid $mol_view
-									sub /
-										<= Countdown_box $mol_view
-											sub <= countdown_content /
-												<= Countdown_label $mol_view sub / \ДО СЛЕДУЮЩЕЙ ВСТРЕЧИ ОСТАЛОСЬ:
-												<= Timer_units $mol_view
-													sub <= timer_units /
-												<= Cfp_promo $mol_view sub / <= cfp_promo_text \
-												<= Cfp_promo_btn $mol_button_minor
-													click? <=> cfp_open? null
-													sub / \[ ПОДАТЬ ЗАЯВКУ ]
-												<= Countdown_skeleton $mol_view
-													sub /
-														<= Countdown_skel_line1 $mol_view
-														<= Countdown_skel_line2 $mol_view
-														<= Countdown_skel_btn $mol_view
-										<= Discovery_card $mol_view
-											sub <= discovery_content /
-												<= Disc_badge $mol_view sub / <= event_badge \NEXT EVENT
-												<= Disc_title $mol_view sub / <= next_event_title \
-												<= Disc_meta_time $mol_view
-													sub /
-														<= Disc_text_time $mol_view sub / <= next_event_time \
-												<= Disc_meta_place $mol_view
-													sub /
-														<= Disc_text_place $mol_view sub / <= next_event_place \
-												<= Disc_meta_map $mol_view
-													sub <= disc_meta_map_content /
-														<= Map_link $mol_link
-															uri <= next_event_map_uri \
-															target \_blank
-															sub / \[ На карте ]
-														<= Review_link $mol_link
-															arg *
-																landing null
-																meetup <= meetup_current_id \
-															sub / \[ Оставить отзыв ]
-												<= Discovery_skeleton $mol_view
-													sub /
-														<= Disc_skel_badge $mol_view
-														<= Disc_skel_title1 $mol_view
-														<= Disc_skel_title2 $mol_view
-														<= Disc_skel_meta1 $mol_view
-														<= Disc_skel_meta2 $mol_view
-				<= Section_manifesto $mol_view
-					attr * id \manifesto
-					sub /
-						<= Manifesto_content $mol_view
-							sub /
-								<= Manifesto_quote $mol_view
-									sub / \«МЫ ПИШЕМ КОД БУДУЩЕГО В СТОЛИЦЕ МОСТОВ И ВЕБ-ТЕХНОЛОГИЙ. БЕЗ СУЕТЫ. БЕЗ ФИЛЬТРОВ. С МАКСИМАЛЬНОЙ ИНЖЕНЕРНОЙ ТОЧНОСТЬЮ»
-								<= Stats_grid $mol_view
-									sub <= stats /
-				<= Section_schedule $mol_view
-					attr * id \schedule
-					sub /
-						<= Schedule_content $mol_view
-							sub <= schedule_content /
-								<= Schedule_heading $mol_view sub / <= schedule_heading \ПРОГРАММА PITERJS
-								<= Schedule_intro $mol_view sub / <= schedule_intro \
-								<= Talks_grid $mol_view
-									sub <= talks /
-								<= Cfp_cta_card $mol_view
-									sub /
-										<= Cfp_cta_badge $mol_view sub / \CALL FOR PAPERS // PITERJS #57
-										<= Cfp_cta_title $mol_view sub / \ХОТИТЕ ВЫСТУПИТЬ С ДОКЛАДОМ НА СЛЕДУЮЩЕМ МИТАПЕ?
-										<= Cfp_cta_text $mol_view sub / \Мы всегда ищем уникальный инженерный опыт, кейсы оптимизации, разборы фреймворков и дерзкие эксперименты. Поможем с подготовкой и презентацией!
-										<= Cfp_open_btn $mol_button_minor
-											click? <=> cfp_open? null
-											sub / \[ ПОДАТЬ ЗАЯВКУ НА ДОКЛАД ]
-								<= Venue_card $mol_view
-									sub <= venue_content /
-										<= Venue_badge $mol_view sub / \VENUE // ПЛОЩАДКА ПРОВЕДЕНИЯ
-										<= Venue_title $mol_view sub / <= venue_title \
-										<= Venue_meta1 $mol_view sub / <= venue_meta1 \
-										<= Venue_meta2 $mol_view sub / <= venue_meta2 \
-										<= Venue_meta3 $mol_view sub / <= venue_meta3 \
-										<= Venue_map_btn $mol_link
-											uri <= venue_map_uri \
-											target \_blank
-											sub / \[ ОТКРЫТЬ НА КАРТЕ ]
-				<= Section_archive $mol_view
-					attr * id \archive
-					sub /
-						<= Archive_content $mol_view
-							sub /
-								<= Archive_heading $mol_view sub / \АРХИВ МИТАПОВ
-								<= Archive_filters $mol_view
-									sub <= filter_buttons /
-								<= Archive_grid $mol_view
-									sub <= archive_cards /
-								<= Archive_more_box $mol_view
-									sub <= archive_more_slot /
-				<= Section_community $mol_view
-					attr * id \community
-					sub /
-						<= Community_content $mol_view
-							sub /
-								<= Community_heading $mol_view sub / \СООБЩЕСТВО
-								<= Community_cards $mol_view
-									sub <= comms /
-				<= Footer $mol_view
-					dom_name \footer
-					sub /
-						<= Footer_inner $mol_view
-							sub /
-								<= Footer_content $mol_view
-									sub /
-										<= Footer_copy $mol_view
-											sub /
-												<= Footer_logo $mol_image
-													uri \piterjs/landing/assets/logo.webp
-												<= Footer_text $mol_view sub / \© 2026 PITERJS COMMUNITY // ST. PETERSBURG
-										<= Footer_links $mol_view
-											sub <= socs /
-								<= Footer_bottom $mol_view
-									sub /
-										<= Footer_author_prefix $mol_view sub / \ENGINE & UI /
-										<= Footer_author $mol_link
-											uri \https://dev-by-yurii.vercel.app
-											target \_blank
-											sub / \DEV-BY-YURII.RU
-		<= Rsvp_modal $mol_view
-			plugins /
-				<= Rsvp_hotkey $mol_hotkey
-					key * escape? <=> rsvp_close? null
-			sub /
-				<= Rsvp_backdrop $mol_view
-					event * click? <=> rsvp_close? null
-				<= Rsvp_dialog $mol_view
-					sub <= rsvp_content /
-						<= Rsvp_head $mol_view
-							sub /
-								<= Rsvp_badge $mol_view sub / \REGISTRATION
-								<= Rsvp_close_btn $mol_button_minor
-									click? <=> rsvp_close? null
-									sub / \[ ✕ ]
-						<= Rsvp_title $mol_view sub / <= rsvp_modal_title \
-						<= Rsvp_meta $mol_view sub / <= rsvp_modal_meta \
-						<= Next_event_reg $mol_view
-							sub /
-								<= Next_event_reg_label $mol_view sub / \Ваше имя и фамилия *
-								<= Next_event_reg_input $mol_string
-									value? <=> visitor_name? \
-									enabled <= visitor_editable true
-									hint \Иван Иванов
-								<= Next_event_reg_bid $mol_view sub / <= visitor_name_bid \
-								<= Next_event_reg_check $mol_check
-									checked? <=> visitor_joined? false
-									enabled <= visitor_join_enabled false
-									title \Я приду на митап
-						<= Rsvp_note $mol_view sub / <= rsvp_modal_note \
-		<= Cfp_modal $mol_view
-			event * click? <=> cfp_backdrop_click? null
-			plugins /
-				<= Cfp_hotkey $mol_hotkey
-					key * escape? <=> cfp_close? null
-			sub /
-				<= Cfp_modal_box $mol_view
-					sub /
-						<= Cfp_header $mol_view
-							sub /
-								<= Cfp_header_title $mol_view sub / \ЗАЯВКА НА ДОКЛАД // CFP
-								<= Cfp_close_btn $mol_button_minor
-									click? <=> cfp_close? null
-									sub / \[ ✕ ]
-						<= Cfp_desc $mol_view
-							sub /
-								\Заполните заявку спикера. Программный комитет PiterJS свяжется с вами для подготовки.
-						<= Cfp_form $mol_view
-							sub /
-								<= Cfp_field_email $mol_view
-									sub /
-										<= Cfp_label_email $mol_view sub / \EMAIL *
-										<= Cfp_input_email $mol_string
-											value? <=> cfp_email? \
-											hint \name@example.com
-								<= Cfp_field_contact $mol_view
-									sub /
-										<= Cfp_label_contact $mol_view sub / \КОНТАКТ ДЛЯ СВЯЗИ (TELEGRAM) *
-										<= Cfp_input_contact $mol_string
-											value? <=> cfp_contact? \
-											hint \@telegram_handle
-								<= Cfp_field_name $mol_view
-									sub /
-										<= Cfp_label_name $mol_view sub / \ИМЯ И ФАМИЛИЯ *
-										<= Cfp_input_name $mol_string
-											value? <=> cfp_name? \
-											hint \Иван Иванов
-								<= Cfp_field_company $mol_view
-									sub /
-										<= Cfp_label_company $mol_view sub / \КОМПАНИЯ И ДОЛЖНОСТЬ
-										<= Cfp_input_company $mol_string
-											value? <=> cfp_company? \
-											hint \Senior Frontend Developer в VK
-								<= Cfp_field_title $mol_view
-									sub /
-										<= Cfp_label_title $mol_view sub / \ТЕМА ДОКЛАДА *
-										<= Cfp_input_title $mol_string
-											value? <=> cfp_title? \
-											hint \Высокопроизводительный WebGPU рендеринг
-								<= Cfp_field_desc $mol_view
-									sub /
-										<= Cfp_label_desc $mol_view sub / \ТЕЗИСЫ И ОПИСАНИЕ ДОКЛАДА *
-										<= Cfp_input_desc $mol_textarea
-											sidebar_showed false
-											value? <=> cfp_desc? \
-											hint \Подробные тезисы, проблемы, решение и практическая польза доклада...
-								<= Cfp_submit_btn $mol_button_major
-									click? <=> cfp_submit? null
-									sub / \[ ОТПРАВИТЬ ЗАЯВКУ ]
+				<= Hero $piterjs_landing_hero
+					meetup <= meetup_current $piterjs_meetup
+					loading <= meetup_loading false
+					passed <= meetup_passed false
+					meetup_title <= meetup_title \
+					next_num <= next_num \
+					free_slots <= free_slots \
+					next_event_time <= next_event_time \
+					next_event_place <= next_event_place \
+					now_time <= now_time 0
+					cfp_open? <=> cfp_open? null
+				<= Manifesto $piterjs_landing_manifesto
+				<= Schedule $piterjs_landing_schedule
+					meetup <= meetup_current $piterjs_meetup
+					meetup_title <= meetup_title \
+					cfp_open? <=> cfp_open? null
+				<= Archive $piterjs_landing_archive
+					meetups <= meetups
+				<= Community $piterjs_landing_community
+				<= Footer $piterjs_landing_footer
+		<= Rsvp $piterjs_landing_rsvp
+			meetup <= meetup_current $piterjs_meetup
+			meetup_title <= meetup_title \
+			next_event_time <= next_event_time \
+			next_event_place <= next_event_place \
+			free_slots <= free_slots \
+			rsvp_close? <=> rsvp_close? null
+		<= Cfp $piterjs_landing_cfp
+			cfp_close? <=> cfp_close? null
+			toast? <=> toast_message? \
 		<= Toast $mol_view
 			sub / <= toast_message \
-	Nav_link!id $mol_link
-		attr *
-			^
-			piterjs_landing_nav_active <= nav_active!id false
-		uri <= nav_uri!id \
-		click? <=> nav_click!id? null
-		sub / <= nav_title!id \
-	Nav_m_link!id $mol_link
-		attr *
-			^
-			piterjs_landing_nav_active <= nav_active!id false
-		uri <= nav_uri!id \
-		click? <=> nav_click!id? null
-		sub / <= nav_title!id \
-	Unit!id $mol_view
-		sub /
-			<= Unit_val!id $mol_view sub / <= unit_str!id \00
-			<= Unit_tag!id $mol_view sub / <= unit_title!id \
-	Stat!id $mol_view
-		sub /
-			<= Stat_val!id $mol_view sub / <= stat_val!id \
-			<= Stat_lbl!id $mol_view sub / <= stat_lbl!id \
-	Comm!id $mol_view
-		sub /
-			<= Comm_badge!id $mol_view sub / <= comm_badge!id \
-			<= Comm_title!id $mol_view sub / <= comm_title!id \
-			<= Comm_text!id $mol_view sub / <= comm_text!id \
-			<= Comm_btn!id $mol_link
-				uri <= comm_uri!id \
-				target \_blank
-				sub / <= comm_btn_text!id \
-	Soc!id $mol_link
-		uri <= soc_uri!id \
-		target \_blank
-		hint <= soc_hint!id \
-		sub /
-			<= Soc_icon!id $mol_image
-				uri <= soc_icon!id \
-	Talk!id $mol_view
-		sub <= talk_content!id /
-			<= Talk_top!id $mol_view
-				sub <= talk_top_content!id /
-					<= Talk_tag!id $mol_view sub / <= talk_tag!id \
-					<= Talk_time!id $mol_view sub / <= talk_time!id \
-			<= Talk_title!id $mol_view sub / <= talk_title!id \
-			<= Talk_abstract!id $mol_view
-				attr *
-					^
-					piterjs_landing_talk_clamped <= talk_clamped!id true
-				style * maxHeight <= talk_max_height!id \9em
-				event * transitionend? <=> talk_transition_end!id? null
-				sub / <= talk_abstract!id \
-			<= Talk_more!id $mol_button_minor
-				click? <=> talk_toggle!id? null
-				sub / <= talk_toggle_title!id \[ Показать больше ]
-			<= Talk_speaker!id $mol_view
-				sub /
-					<= Speaker_photo!id $mol_image
-						uri <= speaker_photo!id \
-					<= Speaker_info!id $mol_view
-						sub <= speaker_info_content!id /
-							<= Speaker_name!id $mol_view sub / <= speaker_name!id \
-							<= Speaker_role!id $mol_view sub / <= speaker_role!id \
-	Archive_card!id $mol_link
-		arg *
-			landing null
-			meetup <= card_id!id \
-		sub /
-			<= Card_event_tag!id $mol_view sub / <= card_event_tag!id \
-			<= Card_title!id $mol_view sub / <= card_title!id \
-			<= Card_meta!id $mol_view
-				sub /
-					<= Card_date!id $mol_view sub / <= card_date!id \
-	Archive_more_btn $mol_button_minor
-		click? <=> archive_more_click? null
-		sub / \[ ПОКАЗАТЬ ЕЩЁ ]
-	Filter_btn!id $mol_button_minor
-		attr *
-			^
-			piterjs_landing_filter_active <= filter_active!id false
-		click? <=> filter_click!id? null
-		sub / <= filter_title!id \

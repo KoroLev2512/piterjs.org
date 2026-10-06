@@ -1,0 +1,15 @@
+$piterjs_landing_manifesto $mol_view
+	attr *
+		^
+		id \manifesto
+	sub /
+		<= Manifesto_content $mol_view
+			sub /
+				<= Manifesto_quote $mol_view
+					sub / \«МЫ ПИШЕМ КОД БУДУЩЕГО В СТОЛИЦЕ МОСТОВ И ВЕБ-ТЕХНОЛОГИЙ. БЕЗ СУЕТЫ. БЕЗ ФИЛЬТРОВ. С МАКСИМАЛЬНОЙ ИНЖЕНЕРНОЙ ТОЧНОСТЬЮ»
+				<= Stats_grid $mol_view
+					sub <= stats /
+	Stat* $mol_view
+		sub /
+			<= Stat_val* $mol_view sub / <= stat_val* \
+			<= Stat_lbl* $mol_view sub / <= stat_lbl* \

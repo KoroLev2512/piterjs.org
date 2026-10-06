@@ -1,0 +1,60 @@
+$piterjs_landing_cfp $mol_view
+	toast? \
+	event * click? <=> cfp_backdrop_click? null
+	plugins /
+		<= Cfp_hotkey $mol_hotkey
+			key * escape? <=> cfp_close? null
+	sub /
+		<= Cfp_modal_box $mol_view
+			sub /
+				<= Cfp_header $mol_view
+					sub /
+						<= Cfp_header_title $mol_view sub / \ЗАЯВКА НА ДОКЛАД // CFP
+						<= Cfp_close_btn $mol_button_minor
+							click? <=> cfp_close? null
+							sub / \[ ✕ ]
+				<= Cfp_desc $mol_view
+					sub /
+						\Заполните заявку спикера. Программный комитет PiterJS свяжется с вами для подготовки.
+				<= Cfp_form $mol_view
+					sub /
+						<= Cfp_field_email $mol_view
+							sub /
+								<= Cfp_label_email $mol_view sub / \EMAIL *
+								<= Cfp_input_email $mol_string
+									value? <=> cfp_email? \
+									hint \name@example.com
+						<= Cfp_field_contact $mol_view
+							sub /
+								<= Cfp_label_contact $mol_view sub / \КОНТАКТ ДЛЯ СВЯЗИ (TELEGRAM) *
+								<= Cfp_input_contact $mol_string
+									value? <=> cfp_contact? \
+									hint \@telegram_handle
+						<= Cfp_field_name $mol_view
+							sub /
+								<= Cfp_label_name $mol_view sub / \ИМЯ И ФАМИЛИЯ *
+								<= Cfp_input_name $mol_string
+									value? <=> cfp_name? \
+									hint \Иван Иванов
+						<= Cfp_field_company $mol_view
+							sub /
+								<= Cfp_label_company $mol_view sub / \КОМПАНИЯ И ДОЛЖНОСТЬ
+								<= Cfp_input_company $mol_string
+									value? <=> cfp_company? \
+									hint \Senior Frontend Developer в VK
+						<= Cfp_field_title $mol_view
+							sub /
+								<= Cfp_label_title $mol_view sub / \ТЕМА ДОКЛАДА *
+								<= Cfp_input_title $mol_string
+									value? <=> cfp_title? \
+									hint \Высокопроизводительный WebGPU рендеринг
+						<= Cfp_field_desc $mol_view
+							sub /
+								<= Cfp_label_desc $mol_view sub / \ТЕЗИСЫ И ОПИСАНИЕ ДОКЛАДА *
+								<= Cfp_input_desc $mol_textarea
+									sidebar_showed false
+									value? <=> cfp_desc? \
+									hint \Подробные тезисы, проблемы, решение и практическая польза доклада...
+						<= Cfp_submit_btn $mol_button_major
+							click? <=> cfp_submit? null
+							sub / \[ ОТПРАВИТЬ ЗАЯВКУ ]

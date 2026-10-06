@@ -1,0 +1,28 @@
+$piterjs_landing_footer $mol_view
+	dom_name \footer
+	sub /
+		<= Footer_inner $mol_view
+			sub /
+				<= Footer_content $mol_view
+					sub /
+						<= Footer_copy $mol_view
+							sub /
+								<= Footer_logo $mol_image
+									uri \piterjs/landing/assets/logo.webp
+								<= Footer_text $mol_view sub / \© 2026 PITERJS COMMUNITY // ST. PETERSBURG
+						<= Footer_links $mol_view
+							sub <= socs /
+				<= Footer_bottom $mol_view
+					sub /
+						<= Footer_author_prefix $mol_view sub / \ENGINE & UI /
+						<= Footer_author $mol_link
+							uri \https://dev-by-yurii.vercel.app
+							target \_blank
+							sub / \DEV-BY-YURII.RU
+	Soc* $mol_link
+		uri <= soc_uri* \
+		target \_blank
+		hint <= soc_hint* \
+		sub /
+			<= Soc_icon* $mol_image
+				uri <= soc_icon* \

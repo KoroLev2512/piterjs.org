@@ -1,0 +1,19 @@
+$piterjs_landing_community $mol_view
+	attr *
+		^
+		id \community
+	sub /
+		<= Community_content $mol_view
+			sub /
+				<= Community_heading $mol_view sub / \СООБЩЕСТВО
+				<= Community_cards $mol_view
+					sub <= comms /
+	Comm* $mol_view
+		sub /
+			<= Comm_badge* $mol_view sub / <= comm_badge* \
+			<= Comm_title* $mol_view sub / <= comm_title* \
+			<= Comm_text* $mol_view sub / <= comm_text* \
+			<= Comm_btn* $mol_link
+				uri <= comm_uri* \
+				target \_blank
+				sub / <= comm_btn_text* \

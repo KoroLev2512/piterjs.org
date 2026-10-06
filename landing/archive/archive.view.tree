@@ -1,0 +1,39 @@
+$piterjs_landing_archive $mol_view
+	meetups /
+	filter_titles *
+		all \Все
+		piterjs \PiterJS
+		piterux \PiterUX
+		conf \Conf
+	attr *
+		^
+		id \archive
+	sub /
+		<= Archive_content $mol_view
+			sub /
+				<= Archive_heading $mol_view sub / \АРХИВ МИТАПОВ
+				<= Archive_filters $mol_view
+					sub <= filter_buttons /
+				<= Archive_grid $mol_view
+					sub <= archive_cards /
+				<= Archive_more_box $mol_view
+					sub <= archive_more_slot /
+	Archive_card* $mol_link
+		arg *
+			landing null
+			meetup <= card_id* \
+		sub /
+			<= Card_event_tag* $mol_view sub / <= card_event_tag* \
+			<= Card_title* $mol_view sub / <= card_title* \
+			<= Card_meta* $mol_view
+				sub /
+					<= Card_date* $mol_view sub / <= card_date* \
+	Archive_more_btn $mol_button_minor
+		click? <=> archive_more_click? null
+		sub / \[ ПОКАЗАТЬ ЕЩЁ ]
+	Filter_btn* $mol_button_minor
+		attr *
+			^
+			piterjs_landing_filter_active <= filter_active* false
+		click? <=> filter_click*? null
+		sub / <= filter_title* \
