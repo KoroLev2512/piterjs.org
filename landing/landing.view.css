@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;700&display=swap');
 
-/* $mol_style_sheet has no @keyframes branch, so animations live here and are
-   attached raw via $mol_style_attach. Referenced from landing.view.css.ts. */
+/* Анимации для стилей компонентов лендинга (pjs_pulse, pjs_slidein, pjs_modal_in,
+   pjs_backdrop_in, pjs_skeleton_shimmer). Сами правила лежат рядом с компонентами. */
 
 @keyframes pjs_pulse {
 	0% { opacity: 1; transform: scale(1); }
@@ -27,4 +27,65 @@
 @keyframes pjs_skeleton_shimmer {
 	0% { background-position: -200% 0; }
 	100% { background-position: 200% 0; }
+}
+
+[piterjs_landing] {
+	display: block;
+	width: 100vw;
+	min-width: 100vw;
+	max-width: 100vw;
+	min-height: 100vh;
+	height: 100vh;
+	overflow-y: auto;
+	overflow-x: hidden;
+	background-color: #000000;
+	color: #eeeeee;
+	font-family: 'Inter', 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, sans-serif;
+	position: relative;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border: none;
+	--color-caution-yellow: #fff313;
+	--color-midnight-steel: #000000;
+	--color-industrial-white: #eeeeee;
+	--color-carbon: #333333;
+	--color-gunmetal: #4b4b4b;
+	--color-aluminum: #afafaf;
+	--font-mono: 'JetBrains Mono', monospace;
+}
+
+[piterjs_landing_main] {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+[piterjs_landing_toast] {
+	position: fixed;
+	bottom: 32px;
+	right: 32px;
+	background: #000000;
+	color: var(--color-caution-yellow);
+	border: 1px solid var(--color-caution-yellow);
+	border-radius: 6px;
+	padding: 14px 20px;
+	font-family: var(--font-mono);
+	font-size: 13px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+	z-index: 2000;
+	animation: pjs_slidein 0.3s ease;
+}
+
+[piterjs_landing]:where([piterjs_landing_rsvp_open="true"]) {
+	overflow-y: hidden;
+}
+
+@media (max-width: 600px) {
+	[piterjs_landing_toast] {
+		left: 12px;
+		right: 12px;
+		bottom: 12px;
+		text-align: center;
+	}
 }

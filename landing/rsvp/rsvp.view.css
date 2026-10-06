@@ -1,0 +1,213 @@
+[piterjs_landing_rsvp] {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 3000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+	box-sizing: border-box;
+}
+
+[piterjs_landing_rsvp_rsvp_backdrop] {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.82);
+	backdrop-filter: blur(8px);
+	cursor: pointer;
+	animation: pjs_backdrop_in 0.2s ease;
+}
+
+[piterjs_landing_rsvp_rsvp_dialog] {
+	position: relative;
+	z-index: 1;
+	width: 100%;
+	max-width: 520px;
+	max-height: 100%;
+	overflow-y: auto;
+	background: #0d0d0d;
+	border: 1px solid #2e2e2e;
+	border-radius: 12px;
+	padding: 32px;
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	box-sizing: border-box;
+	box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85);
+	animation: pjs_modal_in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[piterjs_landing_rsvp_rsvp_head] {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+}
+
+[piterjs_landing_rsvp_rsvp_badge] {
+	font-family: var(--font-mono);
+	font-size: 11px;
+	font-weight: 700;
+	color: var(--color-caution-yellow);
+	letter-spacing: 1px;
+}
+
+/* Кнопка закрытия — та же, что в другой модалке (rsvp и cfp). margin-right отрицательный,
+   чтобы крестик выходил за padding диалога: замерено 17px от правого края вместо 33px.
+   Ширина кнопки больше суммы padding'ов — $mol_button_minor добавляет свои, поэтому
+   значение подобрано по факту, а не расчётом. */
+[piterjs_landing_rsvp_rsvp_close_btn] {
+	background: transparent;
+	border: none;
+	box-shadow: none;
+	color: #aaaaaa;
+	font-family: var(--font-mono);
+	font-size: 12px;
+	padding: 6px 12px;
+	margin-right: -16px;
+	cursor: pointer;
+	transition: color 0.2s ease;
+}
+
+[piterjs_landing_rsvp_rsvp_close_btn]:hover {
+	color: var(--color-caution-yellow);
+	background: transparent;
+	box-shadow: none;
+}
+
+[piterjs_landing_rsvp_rsvp_title] {
+	font-size: clamp(22px, 3vw, 30px);
+	font-weight: 300;
+	letter-spacing: -0.03em;
+	text-transform: uppercase;
+	color: #ffffff;
+	line-height: 1.15;
+}
+
+[piterjs_landing_rsvp_rsvp_meta] {
+	font-family: var(--font-mono);
+	font-size: 12px;
+	color: #aaaaaa;
+	letter-spacing: 0.5px;
+}
+
+[piterjs_landing_rsvp_rsvp_note] {
+	font-family: var(--font-mono);
+	font-size: 11px;
+	color: var(--color-caution-yellow);
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+[piterjs_landing_rsvp_next_event_reg] {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 10px;
+	padding-top: 4px;
+	border-top: 1px solid #202020;
+}
+
+[piterjs_landing_rsvp_next_event_reg_label] {
+	font-family: var(--font-mono);
+	font-size: 11px;
+	font-weight: 700;
+	color: var(--color-aluminum);
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	padding-top: 10px;
+}
+
+/* $mol_string ставит себе inset-рамки через box-shadow — гасим, у нас свой border */
+[piterjs_landing_rsvp_next_event_reg_input] {
+	background: #1a1a1a;
+	border: 1px solid #333333;
+	border-radius: 6px;
+	color: #ffffff;
+	padding: 12px 14px;
+	font-size: 15px;
+	width: 100%;
+	box-sizing: border-box;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	box-shadow: none;
+}
+
+[piterjs_landing_rsvp_next_event_reg_input]:hover {
+	box-shadow: none;
+}
+
+[piterjs_landing_rsvp_next_event_reg_input]:focus {
+	border-color: var(--color-caution-yellow);
+	box-shadow: 0 0 8px rgba(255, 243, 19, 0.2);
+	outline: none;
+}
+
+[piterjs_landing_rsvp_next_event_reg_input]::placeholder {
+	color: #5a5a5a;
+}
+
+[piterjs_landing_rsvp_next_event_reg_bid] {
+	font-family: var(--font-mono);
+	font-size: 11px;
+	color: #ff6b6b;
+}
+
+[piterjs_landing_rsvp_next_event_reg_bid]:empty {
+	display: none;
+}
+
+[piterjs_landing_rsvp_next_event_reg_check] {
+	text-transform: uppercase;
+	align-self: flex-start;
+	background: #11141c;
+	color: #9aa2b4;
+	border: 1px solid #242938;
+	border-radius: 6px;
+	padding: 10px 18px;
+	margin-top: 6px;
+	font-family: var(--font-mono);
+	font-size: 13px;
+	cursor: pointer;
+	transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[piterjs_landing_rsvp_next_event_reg_check]:hover {
+	color: #ffffff;
+	border-color: #4a5368;
+	background: #181d28;
+}
+
+[piterjs_landing_rsvp_next_event_reg_check]:where([disabled="true"]) {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+[piterjs_landing_rsvp_next_event_reg_check]:where([mol_check_checked="true"]) {
+	background: var(--color-caution-yellow);
+	color: #000000;
+	border-color: var(--color-caution-yellow);
+	font-weight: 700;
+}
+
+[piterjs_landing_rsvp_next_event_reg_check]:where([mol_check_checked="true"]):hover {
+	background: var(--color-caution-yellow);
+	color: #000000;
+	border-color: var(--color-caution-yellow);
+}
+
+@media (max-width: 600px) {
+	[piterjs_landing_rsvp] {
+		padding: 12px;
+	}
+
+	[piterjs_landing_rsvp_rsvp_dialog] {
+		padding: 24px 20px;
+		gap: 14px;
+	}
+}

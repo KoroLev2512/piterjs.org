@@ -1,9 +1,326 @@
-/* Клип описания доклада в 6 строк. Через $mol_style_define не выразить:
-   ключи WebkitLineClamp и WebkitBoxOrient начинаются с заглавной буквы, а
-   такие $mol_style_sheet трактует как вложенный компонент и уходит в
-   бесконечную рекурсию по символам значения. Специфичность (0,2,0) перебивает
-   правило модуля для [piterjs_landing_schedule_talk_abstract]. */
+[piterjs_landing_schedule] {
+	background-color: var(--color-industrial-white);
+	color: #000000;
+	padding: 90px 32px;
+	display: flex;
+	justify-content: center;
+}
 
+[piterjs_landing_schedule_schedule_content] {
+	max-width: 1200px;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 36px;
+}
+
+[piterjs_landing_schedule_schedule_heading] {
+	font-size: clamp(28px, 4vw, 44px);
+	font-weight: 300;
+	letter-spacing: -0.04em;
+	color: #000000;
+	text-transform: uppercase;
+}
+
+[piterjs_landing_schedule_schedule_intro] {
+	font-size: 18px;
+	color: #4b4b4b;
+	max-width: 800px;
+	line-height: 1.5;
+	margin-top: -16px;
+}
+
+[piterjs_landing_schedule_talks_grid] {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 24px;
+}
+
+[piterjs_landing_schedule_talk] {
+	background: #ffffff;
+	border: 1px solid #dcdcdc;
+	border-radius: 9px;
+	padding: 28px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+[piterjs_landing_schedule_talk]:hover {
+	border-color: #000000;
+	background-color: #fcfcfc;
+}
+
+[piterjs_landing_schedule_talk_top] {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+[piterjs_landing_schedule_talk_tag] {
+	font-family: var(--font-mono);
+	font-size: 11px;
+	font-weight: 700;
+	background: #000000;
+	color: var(--color-caution-yellow);
+	padding: 4px 10px;
+	border-radius: 4px;
+}
+
+[piterjs_landing_schedule_talk_time] {
+	font-family: var(--font-mono);
+	font-size: 13px;
+	font-weight: 600;
+	color: #666666;
+}
+
+[piterjs_landing_schedule_talk_title] {
+	font-size: 20px;
+	font-weight: 600;
+	color: #000000;
+	line-height: 1.35;
+}
+
+/* сам клип в 6 строк — в landing.view.css: -webkit-line-clamp
+   через $mol_style_define не выразить, см. комментарий там */
+[piterjs_landing_schedule_talk_abstract] {
+	font-size: 14px;
+	color: #555555;
+	line-height: 1.5;
+	overflow: hidden;
+	transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[piterjs_landing_schedule_talk_more] {
+	text-transform: uppercase;
+	align-self: flex-start;
+	background: transparent;
+	border: none;
+	box-shadow: none;
+	padding: 0;
+	margin-top: -8px;
+	color: #000000;
+	font-family: var(--font-mono);
+	font-size: 12px;
+	cursor: pointer;
+	text-decoration: underline;
+	transition: color 0.15s ease;
+}
+
+[piterjs_landing_schedule_talk_more]:hover {
+	background: transparent;
+	box-shadow: none;
+	color: #666666;
+}
+
+[piterjs_landing_schedule_talk_speaker] {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 14px;
+	margin-top: auto;
+	padding-top: 16px;
+	border-top: 1px solid #eeeeee;
+}
+
+[piterjs_landing_schedule_speaker_photo] {
+	width: 52px;
+	height: 52px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 2px solid var(--color-caution-yellow);
+	flex-shrink: 0;
+}
+
+[piterjs_landing_schedule_speaker_info] {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 4px;
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+[piterjs_landing_schedule_speaker_name] {
+	font-weight: 600;
+	font-size: 15px;
+	color: #000000;
+	display: block;
+	line-height: 1.3;
+}
+
+[piterjs_landing_schedule_speaker_role] {
+	font-size: 12px;
+	color: #666666;
+	font-family: var(--font-mono);
+	display: block;
+	white-space: normal;
+	word-break: break-word;
+	line-height: 1.45;
+	width: 100%;
+}
+
+[piterjs_landing_schedule_cfp_cta_card] {
+	background: #000000;
+	color: #ffffff;
+	border-radius: 9px;
+	padding: 32px;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+[piterjs_landing_schedule_cfp_cta_badge] {
+	font-family: var(--font-mono);
+	font-size: 11px;
+	font-weight: 700;
+	color: var(--color-caution-yellow);
+	letter-spacing: 1px;
+}
+
+[piterjs_landing_schedule_cfp_cta_title] {
+	font-size: 22px;
+	font-weight: 400;
+	letter-spacing: -0.02em;
+}
+
+[piterjs_landing_schedule_cfp_cta_text] {
+	font-size: 15px;
+	color: #afafaf;
+	line-height: 1.5;
+	max-width: 800px;
+}
+
+/* Общий вид CFP-кнопки: другая такая же — в коробке отсчёта (hero). Выравнивание у каждой своё. */
+[piterjs_landing_schedule_cfp_open_btn] {
+	text-transform: uppercase;
+	background: rgba(255, 243, 19, 0.08);
+	color: var(--color-caution-yellow);
+	font-family: var(--font-mono);
+	font-weight: 700;
+	font-size: 13px;
+	padding: 8px 16px;
+	border-radius: 6px;
+	border: 1px solid rgba(255, 243, 19, 0.35);
+	box-shadow: none;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	align-self: flex-start;
+	margin-top: 8px;
+}
+
+[piterjs_landing_schedule_cfp_open_btn]:hover {
+	background-color: var(--color-caution-yellow);
+	color: #000000;
+	border-color: var(--color-caution-yellow);
+}
+
+[piterjs_landing_schedule_venue_card] {
+	background: #ffffff;
+	border: 1px solid #dcdcdc;
+	border-radius: 9px;
+	padding: 28px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+[piterjs_landing_schedule_venue_badge] {
+	font-family: var(--font-mono);
+	font-size: 11px;
+	font-weight: 700;
+	color: #777777;
+}
+
+[piterjs_landing_schedule_venue_title] {
+	font-size: 22px;
+	font-weight: 600;
+	color: #000000;
+}
+
+[piterjs_landing_schedule_venue_meta1] {
+	font-size: 14px;
+	color: #444444;
+}
+
+[piterjs_landing_schedule_venue_meta2] {
+	font-size: 14px;
+	color: #444444;
+}
+
+[piterjs_landing_schedule_venue_meta3] {
+	font-size: 14px;
+	color: #444444;
+}
+
+[piterjs_landing_schedule_venue_map_btn] {
+	text-transform: uppercase;
+	align-self: flex-start;
+	display: inline-flex;
+	width: auto;
+	color: #000000;
+	font-family: var(--font-mono);
+	font-weight: 600;
+	font-size: 13px;
+	margin-top: 8px;
+	text-decoration: underline;
+	background: transparent;
+	background-color: transparent;
+	padding: 0;
+}
+
+[piterjs_landing_schedule_venue_map_btn]:hover {
+	color: #000000;
+	background: transparent;
+	background-color: transparent;
+	text-decoration: none;
+}
+
+@media (max-width: 992px) {
+	[piterjs_landing_schedule_talks_grid] {
+		grid-template-columns: 1fr;
+	}
+
+	[piterjs_landing_schedule_cfp_cta_card] {
+		flex-direction: column;
+		gap: 24px;
+		text-align: center;
+		align-items: center;
+	}
+
+	[piterjs_landing_schedule_cfp_open_btn] {
+		align-self: center;
+	}
+}
+
+@media (max-width: 600px) {
+	[piterjs_landing_schedule] {
+		padding: 48px 12px;
+	}
+
+	[piterjs_landing_schedule_venue_card] {
+		padding: 20px 16px;
+	}
+
+	[piterjs_landing_schedule_cfp_cta_card] {
+		padding: 24px 16px;
+	}
+
+	[piterjs_landing_schedule_talks_grid] {
+		gap: 20px;
+	}
+}
+
+@media (max-width: 480px) {
+	[piterjs_landing_schedule] {
+		padding: 40px 10px;
+	}
+}
+
+/* Клип описания доклада в 6 строк, пока карточка свёрнута (атрибут ставит ts).
+   На время анимации раскрытия атрибут снимается, см. talk_clamped. Специфичность
+   (0,2,0) перебивает базовое правило [piterjs_landing_schedule_talk_abstract]. */
 [piterjs_landing_schedule_talk_abstract][piterjs_landing_talk_clamped="true"] {
 	display: -webkit-box;
 	-webkit-box-orient: vertical;

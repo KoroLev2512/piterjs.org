@@ -1,0 +1,502 @@
+[piterjs_landing_hero] {
+	position: relative;
+	min-height: 100vh;
+	height: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 130px 36px 96px 36px;
+	background-color: #000000;
+	background-image: url('piterjs/landing/assets/hero_poster.webp');
+	background-size: cover;
+	background-position: center;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
+[piterjs_landing_hero_hero_video] {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	z-index: 0;
+	pointer-events: none;
+	border: 0;
+}
+
+[piterjs_landing_hero_hero_scrim] {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	pointer-events: none;
+	background-image: radial-gradient(circle at 80% 20%, rgba(255, 243, 19, 0.05) 0%, transparent 40%), 	                  linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.95));
+}
+
+/* растягиваем на всю высоту героя, иначе Hero_intro не к чему
+   растягивать и карточки не уезжают вниз */
+[piterjs_landing_hero_hero_content] {
+	max-width: 1200px;
+	width: 100%;
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	flex: 1 1 auto;
+}
+
+/* Заголовочная группа забирает всё свободное место и центрует себя
+   внутри него: текст стоит по центру, а Hero_footer_grid прижат к низу. */
+[piterjs_landing_hero_hero_intro] {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 24px;
+	flex: 1 1 auto;
+	min-height: 0;
+}
+
+[piterjs_landing_hero_hero_status_row] {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+[piterjs_landing_hero_status_badge] {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	background: #111111;
+	border: 1px solid #333333;
+	padding: 6px 14px;
+	border-radius: 6px;
+	font-family: var(--font-mono);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.5px;
+	color: var(--color-caution-yellow);
+}
+
+[piterjs_landing_hero_hero_title] {
+	font-size: 64px;
+	line-height: 1.05;
+	letter-spacing: -2.56px;
+	font-weight: 300;
+	color: #eeeeee;
+	max-width: 1200px;
+	margin-bottom: 8px;
+	text-transform: uppercase;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+[piterjs_landing_hero_hero_title_line1] {
+	display: block;
+	color: #eeeeee;
+	font-weight: 300;
+}
+
+[piterjs_landing_hero_hero_title_line2] {
+	display: flex;
+	align-items: baseline;
+	gap: 16px;
+}
+
+[piterjs_landing_hero_hero_title_accent] {
+	color: #fff313;
+	font-weight: 300;
+	display: inline;
+}
+
+[piterjs_landing_hero_hero_title_rest] {
+	color: #eeeeee;
+	font-weight: 300;
+	display: inline;
+}
+
+[piterjs_landing_hero_hero_subtitle] {
+	font-size: clamp(16px, 1.8vw, 20px);
+	color: #cccccc;
+	max-width: 1000px;
+	line-height: 1.5;
+	font-weight: 300;
+}
+
+[piterjs_landing_hero_hero_footer_grid] {
+	display: grid;
+	grid-template-columns: 1fr 480px;
+	gap: 32px;
+	align-items: flex-end;
+	margin-top: auto;
+	width: 100%;
+}
+
+/* высота как в состоянии с отсчётом: 24+24 padding + подпись 14 +
+   gap 16 + колонка Unit (38px цифра + 6 отступ + 10 подпись) ≈ 158px.
+   Замерено на живой странице; на мобильном сбрасывается в auto,
+   там цифры 26px и коробка ниже.
+   точка отсчёта для cqw у Cfp_promo */
+[piterjs_landing_hero_countdown_box] {
+	background-color: rgba(45, 45, 45, 0.75);
+	border: 1px solid #4b4b4b;
+	border-radius: 12px;
+	padding: 24px 32px;
+	min-height: 158px;
+	box-sizing: border-box;
+	justify-content: center;
+	container-type: inline-size;
+	backdrop-filter: blur(10px);
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Тот же шрифт, что у цифр отсчёта (Unit_val), но кегль подбирается под
+   ширину коробки, чтобы строка не переносилась. Считаем в cqw, а не в vw:
+   на 992px грид схлопывается в одну колонку и коробка резко расширяется,
+   так что привязка к ширине окна дала бы разрыв.
+   
+   Замерено через Range: 32 знака с трекингом -0.5px занимают 18.6em - 16px.
+   При 5cqw запас до края коробки не меньше 60px на всех брейкпоинтах от
+   390 до 1440, включая 993px, где колонка самая узкая (345px внутри). */
+[piterjs_landing_hero_cfp_promo] {
+	font-family: 'JetBrains Mono', monospace;
+	font-size: clamp(9px, calc((100cqi - 64px) / 20), 32px);
+	font-weight: 400;
+	color: #fff313;
+	line-height: 1.15;
+	letter-spacing: -0.5px;
+	white-space: nowrap;
+	text-transform: uppercase;
+}
+
+/* Общий вид CFP-кнопки: одна в коробке отсчёта (hero), когда митап прошёл, вторая в блоке
+   «Программа» (schedule). Выравнивание у каждой своё. */
+[piterjs_landing_hero_cfp_promo_btn] {
+	text-transform: uppercase;
+	background: rgba(255, 243, 19, 0.08);
+	color: var(--color-caution-yellow);
+	font-family: var(--font-mono);
+	font-weight: 700;
+	font-size: 13px;
+	padding: 8px 16px;
+	border-radius: 6px;
+	border: 1px solid rgba(255, 243, 19, 0.35);
+	box-shadow: none;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	align-self: flex-start;
+}
+
+[piterjs_landing_hero_cfp_promo_btn]:hover {
+	background-color: var(--color-caution-yellow);
+	color: #000000;
+	border-color: var(--color-caution-yellow);
+}
+
+[piterjs_landing_hero_countdown_label] {
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 11px;
+	color: #afafaf;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	display: block;
+}
+
+[piterjs_landing_hero_timer_units] {
+	display: flex;
+	gap: 36px;
+	align-items: flex-start;
+}
+
+[piterjs_landing_hero_unit] {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	background: transparent;
+	border: none;
+	padding: 0;
+}
+
+[piterjs_landing_hero_unit_val] {
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 38px;
+	font-weight: 400;
+	color: #fff313;
+	line-height: 1;
+	margin-bottom: 6px;
+}
+
+[piterjs_landing_hero_unit_tag] {
+	font-family: 'Inter', sans-serif;
+	font-size: 10px;
+	color: #afafaf;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+[piterjs_landing_hero_countdown_skeleton] {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* Скелетоны: общий бегущий блик, keyframes pjs_skeleton_shimmer лежат в landing.view.css. */
+[piterjs_landing_hero_countdown_skel_line1] {
+	background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.05) 75%);
+	background-size: 200% 100%;
+	animation: pjs_skeleton_shimmer 1.8s infinite ease-in-out;
+	border-radius: 4px;
+	height: 14px;
+	width: 55%;
+}
+
+[piterjs_landing_hero_countdown_skel_line2] {
+	background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.05) 75%);
+	background-size: 200% 100%;
+	animation: pjs_skeleton_shimmer 1.8s infinite ease-in-out;
+	border-radius: 4px;
+	height: 32px;
+	width: 80%;
+}
+
+[piterjs_landing_hero_countdown_skel_btn] {
+	background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.05) 75%);
+	background-size: 200% 100%;
+	animation: pjs_skeleton_shimmer 1.8s infinite ease-in-out;
+	border-radius: 6px;
+	height: 32px;
+	width: 140px;
+	margin-top: 4px;
+}
+
+[piterjs_landing_hero_discovery_card] {
+	background-color: #2b2b2b;
+	border: 1px solid #4b4b4b;
+	border-radius: 12px;
+	padding: 26px 28px;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	position: relative;
+	overflow: hidden;
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+[piterjs_landing_hero_discovery_skeleton] {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+[piterjs_landing_hero_disc_skel_badge] {
+	background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.05) 75%);
+	background-size: 200% 100%;
+	animation: pjs_skeleton_shimmer 1.8s infinite ease-in-out;
+	border-radius: 4px;
+	height: 14px;
+	width: 90px;
+}
+
+[piterjs_landing_hero_disc_skel_title1] {
+	background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.05) 75%);
+	background-size: 200% 100%;
+	animation: pjs_skeleton_shimmer 1.8s infinite ease-in-out;
+	border-radius: 4px;
+	height: 20px;
+	width: 90%;
+}
+
+[piterjs_landing_hero_disc_skel_title2] {
+	background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.05) 75%);
+	background-size: 200% 100%;
+	animation: pjs_skeleton_shimmer 1.8s infinite ease-in-out;
+	border-radius: 4px;
+	height: 20px;
+	width: 65%;
+}
+
+[piterjs_landing_hero_disc_skel_meta1] {
+	background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.05) 75%);
+	background-size: 200% 100%;
+	animation: pjs_skeleton_shimmer 1.8s infinite ease-in-out;
+	border-radius: 4px;
+	height: 14px;
+	width: 50%;
+}
+
+[piterjs_landing_hero_disc_skel_meta2] {
+	background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.05) 75%);
+	background-size: 200% 100%;
+	animation: pjs_skeleton_shimmer 1.8s infinite ease-in-out;
+	border-radius: 4px;
+	height: 14px;
+	width: 40%;
+}
+
+[piterjs_landing_hero_disc_badge] {
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 11px;
+	color: #fff313;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	font-weight: 600;
+}
+
+[piterjs_landing_hero_disc_title] {
+	font-size: 19px;
+	font-weight: 500;
+	color: #ffffff;
+	line-height: 1.4;
+}
+
+[piterjs_landing_hero_disc_meta_time] {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 13px;
+	color: #afafaf;
+}
+
+[piterjs_landing_hero_disc_meta_place] {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 13px;
+	color: #afafaf;
+}
+
+[piterjs_landing_hero_disc_meta_map] {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 13px;
+	color: #afafaf;
+}
+
+/* Ссылка-кнопка в карточке события: «На карте» до отзывов и «Оставить отзыв» в течение
+   недели после митапа. Выглядит как CFP-кнопка (см. выше): обе стоят рядом в hero как две
+   главные, и разница в кегле читалась как недоделка. */
+[piterjs_landing_hero_map_link] {
+	text-transform: uppercase;
+	background: rgba(255, 243, 19, 0.08);
+	color: var(--color-caution-yellow);
+	font-family: var(--font-mono);
+	font-weight: 700;
+	font-size: 13px;
+	padding: 8px 16px;
+	border-radius: 6px;
+	border: 1px solid rgba(255, 243, 19, 0.35);
+	box-shadow: none;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+}
+
+[piterjs_landing_hero_map_link]:hover {
+	background-color: var(--color-caution-yellow);
+	color: #000000;
+	border-color: var(--color-caution-yellow);
+}
+
+[piterjs_landing_hero_review_link] {
+	text-transform: uppercase;
+	background: rgba(255, 243, 19, 0.08);
+	color: var(--color-caution-yellow);
+	font-family: var(--font-mono);
+	font-weight: 700;
+	font-size: 13px;
+	padding: 8px 16px;
+	border-radius: 6px;
+	border: 1px solid rgba(255, 243, 19, 0.35);
+	box-shadow: none;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+}
+
+[piterjs_landing_hero_review_link]:hover {
+	background-color: var(--color-caution-yellow);
+	color: #000000;
+	border-color: var(--color-caution-yellow);
+}
+
+@media (max-width: 992px) {
+	[piterjs_landing_hero_hero_title] {
+		font-size: 44px;
+		letter-spacing: -1.5px;
+	}
+
+	[piterjs_landing_hero_hero_footer_grid] {
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+
+	[piterjs_landing_hero_discovery_card] {
+		order: 1;
+	}
+
+	[piterjs_landing_hero_countdown_box] {
+		order: 2;
+	}
+}
+
+@media (max-width: 600px) {
+	[piterjs_landing_hero] {
+		padding: 90px 12px 72px 12px;
+		height: auto;
+		min-height: 100vh;
+	}
+
+	[piterjs_landing_hero_countdown_box] {
+		padding: 20px 16px;
+		min-height: auto;
+	}
+
+	[piterjs_landing_hero_hero_title] {
+		font-size: 30px;
+		letter-spacing: -1px;
+	}
+
+	[piterjs_landing_hero_hero_title_line2] {
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	[piterjs_landing_hero_timer_units] {
+		display: flex;
+		flex-direction: row;
+		gap: 14px;
+		flex-wrap: nowrap;
+		justify-content: flex-start;
+		align-items: flex-start;
+	}
+
+	[piterjs_landing_hero_unit_val] {
+		font-size: 26px;
+	}
+}
+
+@media (max-width: 480px) {
+	[piterjs_landing_hero] {
+		padding: 80px 10px 64px 10px;
+	}
+
+	[piterjs_landing_hero_hero_title] {
+		font-size: 26px;
+	}
+}
